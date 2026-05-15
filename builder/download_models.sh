@@ -72,8 +72,8 @@ snapshot_download(repo_id='speechbrain/spkrec-ecapa-voxceleb')
 
 # Optionally download PyAnnote models if HF_TOKEN is set
 if hf_token:
-    snapshot_download(repo_id='pyannote/embedding', use_auth_token=hf_token)
-    snapshot_download(repo_id='pyannote/speaker-diarization-2.1', use_auth_token=hf_token)
+    snapshot_download(repo_id='pyannote/embedding', token=hf_token)
+    snapshot_download(repo_id='pyannote/speaker-diarization-2.1', token=hf_token)
 else:
     print('WARNING: HF_TOKEN not set, skipping pyannote models download')
 "
