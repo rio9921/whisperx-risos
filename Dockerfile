@@ -1,6 +1,16 @@
 FROM nvidia/cuda:12.3.2-cudnn9-runtime-ubuntu22.04
+LABEL org.opencontainers.image.title="WhisperX Risos AI"
+LABEL org.opencontainers.image.description="WhisperX serverless worker untuk transkripsi akademik Bahasa Indonesia. Fork of hapnan/whisperx-worker."
+LABEL org.opencontainers.image.vendor="PT Riset Sinergi Sosial"
+LABEL org.opencontainers.image.source="https://github.com/rio9921/whisperx-risos"
+LABEL org.opencontainers.image.version="1.0.0"
+LABEL org.risos.ai.component="audio-transcription"
+LABEL org.risos.ai.context="academic-indonesian"
 
-RUN rm -f /etc/apt/sources.list.d/*.list
+
+RUN rm -f /etc/apt/sources.list.d/*.list && \
+    rm -f /var/lib/dpkg/statoverride && \
+    touch /var/lib/dpkg/statoverride
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
@@ -10,7 +20,6 @@ WORKDIR /
 
 # Update and upgrade the system packages
 RUN apt-get update -y && \
-    apt-get upgrade -y && \
     apt-get install --yes --no-install-recommends sudo ca-certificates git wget curl bash libgl1 libx11-6 software-properties-common ffmpeg build-essential -y &&\
     apt-get autoremove -y && \
     apt-get clean -y && \

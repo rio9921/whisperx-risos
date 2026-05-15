@@ -88,8 +88,8 @@ class Predictor(BasePredictor):
                 default=5
             ),
             initial_prompt: str = Input(
-                description="Optional text to provide as a prompt for the first window",
-                default=None),
+                description="Optional prompt untuk steering Whisper. Default: konteks akademik Indonesia (Risos AI).",
+                default="Berikut adalah rekaman wawancara penelitian akademik dalam Bahasa Indonesia. Pembicara menggunakan istilah ilmiah, metodologi penelitian, hipotesis, variabel, populasi, sampel, kuesioner, analisis data, kerangka konseptual, dan terminologi akademik formal. Transkripsi dalam Bahasa Indonesia baku dengan tanda baca tepat."),
             batch_size: int = Input(
                 description="Parallelization of input audio transcription",
                 default=64),

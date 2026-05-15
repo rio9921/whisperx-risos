@@ -1,0 +1,77 @@
+name: Build & Push WhisperX Risos
+
+# Triggers:
+#  - Manual via GitHub UI (workflow_dispatch)
+#  - Auto saat ada perubahan di file relevan di branch main
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'Dockerfile'
+      - 'src/**'
+      - 'builder/**'
+      - 'models/**'
+      - '.github/workflows/docker-build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # GitHub-hosted runners hanya punya ~14GB disk free.
+      # CUDA base image + dependencies bisa makan 10GB+, jadi kita free up space
+      # dengan hapus toolchain yang gak dipakai.
+      - name: Free disk space on runner
+        run: |
+          echo "Before cleanup:"
+          df -h /
+          sudo rm -rf /usr/share/dotnet || true
+          sudo rm -rf /usr/local/lib/android || true
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+          sudo rm -rf /usr/local/share/boost || true
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY" || true
+          sudo docker system prune -af || true
+          echo "After cleanup:"
+          df -h /
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            risosal99/whisperx-risos:v1.0.0
+            risosal99/whisperx-risos:latest
+          # HF token via BuildKit secret mount.
+          # Dockerfile sudah ada line: RUN --mount=type=secret,id=hf_token /builder/download_models.sh
+          # Token TIDAK akan nyangkut di image layers / metadata.
+          secrets: |
+            "hf_token=${{ secrets.HF_TOKEN }}"
+          # Cache layers untuk speed up rebuild di GHA cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify image pushed
+        run: |
+          echo "Image successfully pushed to:"
+          echo "  - risosal99/whisperx-risos:v1.0.0"
+          echo "  - risosal99/whisperx-risos:latest"
+          echo ""
+          echo "Verify di Docker Hub:"
+          echo "  https://hub.docker.com/r/risosal99/whisperx-risos/tags"

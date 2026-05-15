@@ -36,14 +36,9 @@ logger.setLevel(logging.DEBUG)
 raw_token = os.environ.get("HF_TOKEN", "")
 hf_token = raw_token.strip()
 
-if not hf_token.startswith("hf_"):
-    print(f"Token malformed or missing 'hf_' prefix. Forcing correction...")
-    hf_token = "h" + hf_token  # Force adding the 'h' (temporary fix)
-
 #print(f" Final HF_TOKEN used: #{hf_token}")
 if hf_token:
     try:
-        logger.debug(f"HF_TOKEN Loaded: {repr(hf_token[:10])}...")  # Show only start of token for security
         login(token=hf_token, add_to_git_credential=False)  # Safe for container runs
         user = whoami(token=hf_token)
         logger.info(f"Hugging Face Authenticated as: {user['name']}")
