@@ -7,7 +7,7 @@ _DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 _EMBED  = Inference(
     "pyannote/embedding",
     device=_DEVICE,
-    use_auth_token=os.getenv("HF_TOKEN")
+    token=os.getenv("HF_TOKEN")
 )
 
 _CACHE = {}                                   # name → 512-D vector

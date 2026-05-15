@@ -115,7 +115,7 @@ def load_known_speakers_from_samples(speaker_samples,  huggingface_access_token=
     
     try:
         # First try with minimal logging to use cached model
-        model = Inference("pyannote/embedding", use_auth_token=huggingface_access_token, device=device)
+        model = Inference("pyannote/embedding", token=huggingface_access_token, device=device)
         logger.debug("Successfully loaded pyannote embedding model")
     except Exception as e:
         logger.error(f"Failed to load pyannote embedding model: {e}", exc_info=True)
@@ -131,7 +131,7 @@ def load_known_speakers_from_samples(speaker_samples,  huggingface_access_token=
     known_embeddings = {}
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     try:
-        model = Inference("pyannote/embedding", use_auth_token=huggingface_access_token, device=device)
+        model = Inference("pyannote/embedding", token=huggingface_access_token, device=device)
     except Exception as e:
         logger.error(f"Failed to load pyannote embedding model: {e}", exc_info=True)
         return {}
@@ -274,7 +274,7 @@ def process_diarized_output(
     }
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    embedder = Inference("pyannote/embedding", use_auth_token=huggingface_access_token, device=device)
+    embedder = Inference("pyannote/embedding", token=huggingface_access_token, device=device)
 
     segments = output.get("segments", [])
     if not segments:
