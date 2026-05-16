@@ -12,10 +12,7 @@ from scipy.spatial.distance import cosine
 import logging
 import librosa
 import torch, numpy as np
-try:
-    from speechbrain.inference.classifiers import EncoderClassifier  # speechbrain >= 1.0
-except ImportError:
-    from speechbrain.pretrained import EncoderClassifier  # speechbrain < 1.0 fallback
+from speechbrain.pretrained import EncoderClassifier  # speechbrain 0.5.x (pinned in requirements)
 # -----------------------------------------------------------------
 # Load the pyannote embedding model once globally
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
