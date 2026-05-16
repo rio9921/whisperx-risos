@@ -19,7 +19,10 @@ from typing import Optional
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-from speechbrain.pretrained import EncoderClassifier # type: ignore
+try:
+    from speechbrain.inference.speaker import EncoderClassifier  # speechbrain >= 1.0
+except ImportError:
+    from speechbrain.pretrained import EncoderClassifier  # speechbrain < 1.0 fallback
 
 def spk_embed(wave_16k_mono: np.ndarray) -> np.ndarray:
     wav = torch.tensor(wave_16k_mono).unsqueeze(0).to(device)
