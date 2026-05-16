@@ -20,7 +20,7 @@ from typing import Optional
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 try:
-    from speechbrain.inference.speaker import EncoderClassifier  # speechbrain >= 1.0
+    from speechbrain.inference.classifiers import EncoderClassifier  # speechbrain >= 1.0
 except ImportError:
     from speechbrain.pretrained import EncoderClassifier  # speechbrain < 1.0 fallback
 

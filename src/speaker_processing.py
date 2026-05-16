@@ -13,7 +13,7 @@ import logging
 import librosa
 import torch, numpy as np
 try:
-    from speechbrain.inference.speaker import EncoderClassifier  # speechbrain >= 1.0
+    from speechbrain.inference.classifiers import EncoderClassifier  # speechbrain >= 1.0
 except ImportError:
     from speechbrain.pretrained import EncoderClassifier  # speechbrain < 1.0 fallback
 # -----------------------------------------------------------------
