@@ -5,12 +5,11 @@ torchaudio==2.4.1
 
 # ---------- main libs ----------
 whisperx
-# pyannote.audio 4.x (Sep 2025+) removed use_auth_token from Pipeline/Inference,
-# breaking whisperx's VAD setup in asr.py. Pin to 3.x until whisperx migrates.
+# pyannote.audio 4.x removed use_auth_token; 3.3+ requires speechbrain>=1.0
+# whose .pretrained module was removed and from_hparams() changed.
+# Pin to 3.1.1 (requires speechbrain>=0.5.14) + speechbrain 0.5.16.
 # Refs: github.com/m-bain/whisperX/issues/1241, /issues/1406
-pyannote.audio>=3.3.0,<4.0
-# speechbrain 1.0+ removed `speechbrain.pretrained` and changed
-# EncoderClassifier.from_hparams() defaults. Pin to last 0.5.x.
+pyannote.audio==3.1.1
 speechbrain==0.5.16          # ECAPA embedding that whisperx uses
 ctranslate2                  # used by whisperx
 
