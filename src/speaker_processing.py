@@ -16,7 +16,6 @@ from speechbrain.pretrained import EncoderClassifier
 # -----------------------------------------------------------------
 # Load the pyannote embedding model once globally
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-EMBED_MODEL = Inference("pyannote/embedding", device=DEVICE)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # at top of rp_handler.py (or speaker_processing.py)
@@ -24,7 +23,8 @@ from dotenv import load_dotenv, find_dotenv
 import os
 # find and load your .env file
 load_dotenv(find_dotenv())
-HF_TOKEN = os.getenv("HF_TOKEN") 
+HF_TOKEN = os.getenv("HF_TOKEN")
+EMBED_MODEL = Inference("pyannote/embedding", device=DEVICE, use_auth_token=HF_TOKEN)
 
 ecapa = EncoderClassifier.from_hparams(
     source="speechbrain/spkrec-ecapa-voxceleb",

@@ -5,23 +5,25 @@ torchaudio==2.4.1
 
 # ---------- main libs ----------
 whisperx
-pyannote.audio               # embedded/diarization
-speechbrain                 # ECAPA embedding that whisperx uses
+# pyannote.audio 4.x (Sep 2025+) removed use_auth_token from Pipeline/Inference,
+# breaking whisperx's VAD setup in asr.py. Pin to 3.x until whisperx migrates.
+# Refs: github.com/m-bain/whisperX/issues/1241, /issues/1406
+pyannote.audio>=3.3.0,<4.0
+speechbrain                  # ECAPA embedding that whisperx uses
 ctranslate2                  # used by whisperx
+
 # ---------- speechbrain dependencies ----------
 sentencepiece
+
 # ---------- utilities ----------
 pydub
-numpy                        # CUDA 12.1 compatible
+# numpy 2.x removed np.NaN/np.Inf aliases that pyannote.audio 3.x still uses.
+numpy<2.0
 scipy
 librosa
-huggingface-hub
+# huggingface_hub<0.30 keeps use_auth_token as a deprecated alias, which pyannote
+# 3.x calls internally via hf_hub_download(use_auth_token=...).
+huggingface_hub<0.30
 runpod
-cog
-speechbrain
 cryptography
 python-dotenv
-# ---------- runpod / cog ----------
-# Latest runpod (s2.x) supports Python 3.10 / 3.11
-runpod
-# "cog" is **only** needed in local dev; drop it in container

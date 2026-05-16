@@ -172,6 +172,7 @@ def run(job):
     # ------------- 2) download speaker profiles (optional) ----------
     speaker_profiles = job_input.get("speaker_samples", [])
     embeddings = {}
+    enrollment_warning = None
     if speaker_profiles:
         try:
             embeddings = load_known_speakers_from_samples(
@@ -181,8 +182,8 @@ def run(job):
             logger.info(f"Enrolled {len(embeddings)} speaker profiles successfully.")
         except Exception as e:
             logger.error("Enrollment failed", exc_info=True)
-            output_dict["warning"] = f"Enrollment skipped: {e}"
-      
+            enrollment_warning = f"Enrollment skipped: {e}"
+
     # ----------------------------------------------------------------
 
     # ------------- 3) call WhisperX / VAD / diarization -------------
@@ -215,6 +216,8 @@ def run(job):
         "segments"         : result.segments,
         "detected_language": result.detected_language
     }
+    if enrollment_warning:
+        output_dict["warning"] = enrollment_warning
 
     # Sanitize output to valid JSON
     try:
